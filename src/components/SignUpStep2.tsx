@@ -5,18 +5,34 @@ import { ChevronLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import axios from "axios";
+import { userInfoType } from "@/type/userInfoType";
 
-export const SignUpStep2 = ({setStep}:{setStep:Function}) => {
-  const [userInfo, setUserInfo] = useState({
-    password: "",
-    confirm: "",
-  });
+export const SignUpStep2 = ({
+  setStep,
+  setUserInfo,
+  userInfo,
+}: {
+  setStep: Function;
+  setUserInfo: Function;
+  userInfo: userInfoType;
+}) => {
   const [error, setError] = useState({
     password: "",
     confirm: "",
   });
   const router = useRouter();
-
+  const checkPassword = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/user/signup/password",
+        userInfo
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "password") {
       setUserInfo({ ...userInfo, password: e.target.value });
@@ -25,10 +41,12 @@ export const SignUpStep2 = ({setStep}:{setStep:Function}) => {
     }
   };
   const letsGoHandler = () => {
-    if (userInfo.password.length == 0 || userInfo.password.length < 8) {
+    if (userInfo.password.length < 8) {
       setError({ confirm: "don't match", password: "lenght" });
     } else if (userInfo.password !== userInfo.confirm) {
       setError({ password: "", confirm: "don't match" });
+    } else {
+      checkPassword();
     }
   };
 
@@ -37,7 +55,7 @@ export const SignUpStep2 = ({setStep}:{setStep:Function}) => {
   }, [error]);
   return (
     <div className="flex flex-col gap-6 w-[400px]">
-      <Button className="w-fit border bg-white px-3 py-3">
+      <Button className="w-fit border bg-white px-3 py-3" onClick={setStep(1)}>
         <ChevronLeft color="black " />
       </Button>
       <div>

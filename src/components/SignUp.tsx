@@ -3,33 +3,49 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { userInfoType } from "@/type/userInfoType";
 import Link from "next/link";
+import axios from "axios";
 
-export const SignUp = ({setStep}:{setStep:Function}) => {
-  const [useInfo, setUserInfo] = useState({
-    email: "",
-  });
-  const [error,setError] = useState("")
-  const router = useRouter();
-
+export const SignUp = ({
+  setStep,
+  setUserInfo,
+  userInfo,
+}: {
+  setStep: Function;
+  setUserInfo: Function;
+  userInfo: userInfoType;
+}) => {
+  const [error, setError] = useState("");
+  const checkSignedUp = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/user/signup",
+        userInfo
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInfo({ ...useInfo, email: e.target.value });
+    setUserInfo({ ...userInfo, email: e.target.value });
   };
   const letsGoHandler = () => {
     const checkEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(useInfo.email.length===0){
-        setError("lenght")
-    }else if (!checkEmail.test(useInfo.email)) {
-        setError("type")
-    }else{
-      setError("")
-        setStep(2)
+    if (userInfo.email.length === 0) {
+      setError("lenght");
+    } else if (!checkEmail.test(userInfo.email)) {
+      setError("type");
+    } else {
+      setError("");
+      checkSignedUp();
+      // setStep(2);
     }
   };
   useEffect(() => {
-    console.log(useInfo);
-  }, [useInfo]);
+    console.log(userInfo);
+  }, [userInfo]);
   return (
     <div className="flex flex-col gap-6 w-[400px]">
       <Button className="w-fit border bg-white px-3 py-3">
@@ -47,9 +63,11 @@ export const SignUp = ({setStep}:{setStep:Function}) => {
           name="email"
           onChange={handleOnChangeEmail}
         />
-        {
-        error.length!==0&&<p className="text-red-500">Invalid email. Use a format like example@email.com</p>
-        }
+        {error.length !== 0 && (
+          <p className="text-red-500">
+            Invalid email. Use a format like example@email.com
+          </p>
+        )}
         <a className="underline" href="">
           Forgot password ?
         </a>
