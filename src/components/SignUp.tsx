@@ -17,13 +17,15 @@ export const SignUp = ({
   userInfo: userInfoType;
 }) => {
   const [error, setError] = useState("");
+
   const checkSignedUp = async () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/user/signup",
         userInfo
       );
-      console.log(response);
+      console.log(response.data.success);
+      return response.data.success
     } catch (error) {
       console.log(error);
     }
@@ -31,7 +33,7 @@ export const SignUp = ({
   const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({ ...userInfo, email: e.target.value });
   };
-  const letsGoHandler = () => {
+  const letsGoHandler =async () => {
     const checkEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (userInfo.email.length === 0) {
       setError("lenght");
@@ -39,8 +41,11 @@ export const SignUp = ({
       setError("type");
     } else {
       setError("");
-      checkSignedUp();
-      // setStep(2);
+      const haveAcc=checkSignedUp();
+      if(await haveAcc){
+      setStep(2);
+      }
+      else{setError("have acc")}
     }
   };
   useEffect(() => {
@@ -63,7 +68,12 @@ export const SignUp = ({
           name="email"
           onChange={handleOnChangeEmail}
         />
-        {error.length !== 0 && (
+        {
+          error.includes("acc")&&(
+            <p className="text-red-500">Already have a account. Please login</p>
+          )
+        }
+        {error.length !== 0 && !error.includes("acc") &&(
           <p className="text-red-500">
             Invalid email. Use a format like example@email.com
           </p>
