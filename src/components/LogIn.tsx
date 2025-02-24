@@ -3,7 +3,6 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 export const LogIn = () => {
   const [userInfo, setUserInfo] = useState({

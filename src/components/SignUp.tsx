@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { userInfoType } from "@/type/userInfoType";
+import {emailYup} from '@/utils/userYup'
 import Link from "next/link";
 import axios from "axios";
 
@@ -34,6 +35,11 @@ export const SignUp = ({
     setUserInfo({ ...userInfo, email: e.target.value });
   };
   const letsGoHandler =async () => {
+    // try {
+      
+    // } catch (error) {
+      
+    // }
     const checkEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (userInfo.email.length === 0) {
       setError("lenght");
