@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { userInfoType } from "@/type/userInfoType";
-import {emailYup} from '@/utils/userYup'
+import { emailYup } from "@/utils/userYup";
 import Link from "next/link";
 import axios from "axios";
 
@@ -26,7 +26,7 @@ export const SignUp = ({
         userInfo
       );
       console.log(response.data.success);
-      return response.data.success
+      return response.data.success;
     } catch (error) {
       console.log(error);
     }
@@ -34,11 +34,11 @@ export const SignUp = ({
   const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({ ...userInfo, email: e.target.value });
   };
-  const letsGoHandler =async () => {
+  const letsGoHandler = async () => {
     // try {
-      
+
     // } catch (error) {
-      
+
     // }
     const checkEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (userInfo.email.length === 0) {
@@ -47,11 +47,12 @@ export const SignUp = ({
       setError("type");
     } else {
       setError("");
-      const haveAcc=checkSignedUp();
-      if(await haveAcc){
-      setStep(2);
+      const haveAcc = checkSignedUp();
+      if (await haveAcc) {
+        setStep(2);
+      } else {
+        setError("have acc");
       }
-      else{setError("have acc")}
     }
   };
   useEffect(() => {
@@ -74,12 +75,10 @@ export const SignUp = ({
           name="email"
           onChange={handleOnChangeEmail}
         />
-        {
-          error.includes("acc")&&(
-            <p className="text-red-500">Already have a account. Please login</p>
-          )
-        }
-        {error.length !== 0 && !error.includes("acc") &&(
+        {error.includes("acc") && (
+          <p className="text-red-500">Already have a account. Please login</p>
+        )}
+        {error.length !== 0 && !error.includes("acc") && (
           <p className="text-red-500">
             Invalid email. Use a format like example@email.com
           </p>

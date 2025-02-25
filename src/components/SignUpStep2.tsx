@@ -55,8 +55,10 @@ export const SignUpStep2 = ({
   }, [error]);
   return (
     <div className="flex flex-col gap-6 w-[400px]">
-      <Button className="w-fit border bg-white px-3 py-3" 
-      onClick={()=>setStep(1)}>
+      <Button
+        className="w-fit border bg-white px-3 py-3"
+        onClick={() => setStep(1)}
+      >
         <ChevronLeft color="black " />
       </Button>
       <div>
