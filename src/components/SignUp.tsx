@@ -22,7 +22,7 @@ export const SignUp = ({
   const checkSignedUp = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/user/signup",
+        "http://localhost:4000/user/signup",
         userInfo
       );
       console.log(response.data.success);

@@ -25,7 +25,7 @@ export const SignUpStep2 = ({
   const checkPassword = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/user/signup/password",
+        "http://localhost:4000/user/signup/password",
         userInfo
       );
       console.log(response);
