@@ -1,4 +1,4 @@
-import { LogIn } from "../../components/LogIn";
+import { LogIn } from "./_features/LogIn";
 export default function Home() {
   return (
     <div className="flex w-screen items-center justify-center py-5 ">

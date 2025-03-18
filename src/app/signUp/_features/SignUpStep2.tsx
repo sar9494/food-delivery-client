@@ -1,6 +1,6 @@
 "use client";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";

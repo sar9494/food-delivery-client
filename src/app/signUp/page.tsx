@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { SignUp } from "./signUp/_features/SignUp";
-import { SignUpStep2 } from "./signUp/_features/SignUpStep2";
+import { SignUp } from "./_features/SignUp";
+import { SignUpStep2 } from "./_features/SignUpStep2";
 
 export default function Home() {
   const [step, setStep] = useState(1);
