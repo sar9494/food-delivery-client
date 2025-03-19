@@ -1,13 +1,14 @@
 "use client";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
-import { ChevronLeft } from "lucide-react";
-import { useState, useEffect } from "react";
 import { userInfoType } from "@/type/userInfoType";
-import { Formik } from "formik";
+import { Formik, useFormik } from "formik";
 import Link from "next/link";
 import axios from "axios";
-import { emailYup } from "@/utils/userYup";
+import { emailSchema } from "@/utils/userYup";
+import { BackButton } from "../_components/BackButton";
+import * as yup from "yup";
+import { useState } from "react";
 
 export const SignUp = ({
   setStep,
@@ -18,66 +19,46 @@ export const SignUp = ({
   setUserInfo: Function;
   userInfo: userInfoType;
 }) => {
-  const [error, setError] = useState("");
+  const [isExist, setIsExist] = useState(true);
 
-  const checkSignedUp = async () => {
+  const handleCheckEmail = async (values: { email: string }) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/user/signup",
-        userInfo
+        "http://localhost:4000/user/signUp",
+        values
       );
-      console.log(response.data.success);
-      return response.data.success;
+      setIsExist(response.data.success);
+      if (response.data.success) {
+        setUserInfo({ ...userInfo, email: values.email });
+        setStep(2);
+      }
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInfo({ ...userInfo, email: e.target.value });
-  };
-  const letsGoHandler = async () => {
-    // try {
 
-    // } catch (error) {
-
-    // }
-    const checkEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (userInfo.email.length === 0) {
-      setError("lenght");
-    } else if (!checkEmail.test(userInfo.email)) {
-      setError("type");
-    } else {
-      setError("");
-      const haveAcc = checkSignedUp();
-      if (await haveAcc) {
-        setStep(2);
-      } else {
-        setError("have acc");
-      }
-    }
-  };
-  useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo]);
   return (
     <Formik
-      validationSchema={emailYup}
-      onSubmit={letsGoHandler}
       initialValues={{ email: "" }}
+      validationSchema={emailSchema}
+      onSubmit={(values) => {
+        console.log("tets");
+
+        handleCheckEmail(values);
+      }}
     >
       {({ values, errors, handleChange, handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-6 w-[400px]">
-            <Button className="w-fit border bg-white px-3 py-3">
-              <ChevronLeft color="black " />
-            </Button>
+            <BackButton />
             <div>
               <p>
                 <b>Create your account</b>
               </p>
               <p>Sign up to explore your favorite dishes.</p>
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-0.5">
               <Input
                 placeholder="Enter your email address"
                 name="email"
@@ -85,9 +66,7 @@ export const SignUp = ({
                 onChange={handleChange}
               />
               <p className="text-red-500">{errors.email}</p>
-              <a className="underline" href="">
-                Forgot password ?
-              </a>
+              {!isExist && <p className="text-red-500">Already have account</p>}
             </div>
             <Button type="submit">Next</Button>
             <div className="flex gap-2">

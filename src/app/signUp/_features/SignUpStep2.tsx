@@ -1,115 +1,87 @@
 "use client";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
-import { ChevronLeft } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import { userInfoType } from "@/type/userInfoType";
-
+import { BackButton } from "../_components/BackButton";
+import { Formik } from "formik";
+import { passRejex } from "@/utils/userYup";
 export const SignUpStep2 = ({
   setStep,
-  setUserInfo,
   userInfo,
 }: {
   setStep: Function;
-  setUserInfo: Function;
   userInfo: userInfoType;
 }) => {
-  const [error, setError] = useState({
-    password: "",
-    confirm: "",
-  });
   const router = useRouter();
-  const checkPassword = async () => {
+  const letsGoHandler = async (values: { password: string }) => {
+    const newUser = { ...userInfo, password: values.password };
     try {
       const response = await axios.post(
         "http://localhost:4000/user/signup/password",
-        userInfo
+        newUser
       );
-      console.log(response);
+      if (response.data.success) {
+        router.push("/login");
+      }
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.name === "password") {
-      setUserInfo({ ...userInfo, password: e.target.value });
-    } else {
-      setUserInfo({ ...userInfo, confirm: e.target.value });
-    }
-  };
-  const letsGoHandler = () => {
-    if (userInfo.password.length < 8) {
-      setError({ confirm: "don't match", password: "lenght" });
-    } else if (userInfo.password !== userInfo.confirm) {
-      setError({ password: "", confirm: "don't match" });
-    } else {
-      checkPassword();
-    }
-  };
 
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
   return (
-    <div className="flex flex-col gap-6 w-[400px]">
-      <Button
-        className="w-fit border bg-white px-3 py-3"
-        onClick={() => setStep(1)}
-      >
-        <ChevronLeft color="black " />
-      </Button>
-      <div>
-        <p>
-          <b>Create your account</b>
-        </p>
-        <p>Create a strong password with letters, numbers.</p>
-      </div>
-      <div className="flex flex-col gap-4">
-        <div>
-          <Input
-            placeholder="Password"
-            name="password"
-            onChange={handleOnChangeEmail}
-          />
-          {error.password.includes("lenght") && (
-            <p className="text-red-500">
-              Weak password. Use numbers and symbols.
-            </p>
-          )}
-        </div>
-        <div>
-          <Input
-            placeholder="Confirm"
-            name="confirm"
-            onChange={handleOnChangeEmail}
-          />
-          {error.confirm.includes("match") && (
-            <p className="text-red-500">
-              Those password did’t match, Try again
-            </p>
-          )}
-          {error.confirm.includes("lenght") && (
-            <p className="text-red-500">
-              Weak password. Use numbers and symbols.
-            </p>
-          )}
-        </div>
-
-        <label className="flex gap-2">
-          <input type="checkbox" />
-          <p>Show password</p>
-        </label>
-      </div>
-      <Button onClick={() => letsGoHandler()}>Let's Go</Button>
-      <div className="flex gap-2">
-        <p>Already have an account?</p>
-        <Link href={`/login`}>
-          <p className="text-[#2563EB]">Log in</p>
-        </Link>
-      </div>
-    </div>
+    <Formik
+      validationSchema={passRejex}
+      initialValues={{
+        password: "",
+        confirm: "",
+      }}
+      onSubmit={letsGoHandler}
+    >
+      {({ errors, values, handleChange, handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-6 w-[400px]">
+            <BackButton onClick={() => setStep(1)} />
+            <div>
+              <p>
+                <b>Create your account</b>
+              </p>
+              <p>Create a strong password with letters, numbers.</p>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div>
+                <Input
+                  placeholder="Password"
+                  name="password"
+                  onChange={handleChange}
+                  value={values.password}
+                />
+                <p className="text-red-500">{errors.password}</p>
+              </div>
+              <div>
+                <Input
+                  placeholder="Confirm"
+                  name="confirm"
+                  onChange={handleChange}
+                  value={values.confirm}
+                />
+                <p className="text-red-500">{errors.confirm}</p>
+              </div>
+              <label className="flex gap-2">
+                <input type="checkbox" />
+                <p>Show password</p>
+              </label>
+            </div>
+            <Button type="submit">Let's Go</Button>
+            <Link href={`/login`}>
+              <p className="text-[#2563EB]">Already have an account?</p>
+            </Link>
+          </div>
+        </form>
+      )}
+    </Formik>
   );
 };

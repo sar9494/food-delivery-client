@@ -3,8 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { userRejex } from "@/utils/userYup";
+import { loginRejex } from "@/utils/userYup";
 import { Formik } from "formik";
+import Link from "next/link";
 
 export const LogIn = () => {
   const router = useRouter();
@@ -31,7 +32,7 @@ export const LogIn = () => {
 
   return (
     <Formik
-      validationSchema={userRejex}
+      validationSchema={loginRejex}
       onSubmit={logInHandler}
       initialValues={{ email: "", password: "" }}
     >
@@ -56,9 +57,14 @@ export const LogIn = () => {
                 value={values.password}
               />
               <p className="text-red-500">{errors.password}</p>
-              <a className="underline" href="">
-                Forgot password ?
-              </a>
+              <div className="flex justify-between">
+                <a className="underline" href="">
+                  Forgot password ?
+                </a>
+                <Link href={"/signUp"}>
+                  <p className="text-blue-400">Don't have a account?</p>
+                </Link>
+              </div>
             </div>
             <Button type="submit">Let's Go</Button>
           </div>
