@@ -15,7 +15,7 @@ import * as yup from "yup";
 const addressSchema = yup.object({
   address: yup.string().required("Address is required.").min(10),
 });
-import { updateUser } from "@/utils/user";
+import { updateUserInfo } from "@/utils/user";
 
 export function AddAddress() {
   return (
@@ -56,8 +56,8 @@ export function AddAddress() {
                   </Button>
                   <Button
                     type="submit"
-                    onClick={() => {
-                      updateUser({
+                    onClick={async () => {
+                      await updateUserInfo({
                         ...values,
                         token: localStorage.getItem("token"),
                       });
