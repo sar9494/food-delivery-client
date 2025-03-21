@@ -1,9 +1,35 @@
 "use client";
 import { Header } from "@/components/header/Header";
+import { Categories } from "./_features/Categories";
+import { useEffect, useState } from "react";
+import { getCategories, getFoods } from "@/utils/getDataFunctions";
+import { Category, Food } from "@/utils/types";
+import { Foods } from "./_features/Foods";
 export default function Home() {
+  const [categories, setCategories] = useState(Array<Category>);
+  const [foods, setFoods] = useState(Array<Food>);
+  useEffect(() => {
+    const fetchData = async () => {
+      const categories = await getCategories();
+      console.log(categories);
+      setCategories(categories);
+      const foods = await getFoods();
+      setFoods(foods);
+      console.log(foods);
+    };
+    fetchData();
+  }, []);
   return (
-    <div className="flex w-screen items-center justify-center py-5 ">
+    <div className=" w-screen bg-gray-700 flex flex-col items-center">
       <Header />
+      <img
+        src="https://res.cloudinary.com/dszot6j60/image/upload/v1742291965/BG_ejsubm.png"
+        alt=""
+      />
+      <div className="w-4/5 p-5 flex flex-col gap-5">
+        <Categories categories={categories} />
+        <Foods categories={categories} foods={foods} />
+      </div>
     </div>
   );
 }
