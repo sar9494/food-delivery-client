@@ -14,6 +14,7 @@ import { useState } from "react";
 
 export const AddOrder = ({ food }: { food: Food }) => {
   const [foodCount, setFoodCount] = useState(1);
+  const handlerAddFoodToOrder = () => {};
   return (
     <Dialog>
       <DialogTrigger asChild>
