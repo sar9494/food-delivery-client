@@ -14,6 +14,24 @@ import { useState } from "react";
 
 export const AddOrder = ({ food }: { food: Food }) => {
   const [foodCount, setFoodCount] = useState(1);
+  const [chosenFoods, setChosenFoods] = useState<
+    { food: Food; count: number }[]
+  >(() => {
+    const savedFoods = localStorage.getItem("chosenFoods");
+    return savedFoods ? JSON.parse(savedFoods) : [];
+  });
+  console.log(chosenFoods);
+
+  const addToCart = () => {
+    console.log(chosenFoods);
+
+    const isChosenBefore = chosenFoods.filter((el) => el.food._id === food._id);
+    if (isChosenBefore.length === 0) {
+      const updatedFoods = [...chosenFoods, { food, count: foodCount }];
+      setChosenFoods(updatedFoods);
+      localStorage.setItem("chosenFoods", JSON.stringify(updatedFoods));
+    }
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -59,7 +77,9 @@ export const AddOrder = ({ food }: { food: Food }) => {
                   </Button>
                 </div>
               </div>
-              <Button className="w-full rounded-full">Add to card</Button>
+              <Button className="w-full rounded-full" onClick={addToCart}>
+                Add to card
+              </Button>
             </div>
           </div>
         </div>
