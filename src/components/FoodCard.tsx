@@ -1,5 +1,6 @@
 import { Food } from "@/utils/types";
 import { AddOrder } from "./AddOrder";
+
 export const FoodCard = ({ food }: { food: Food }) => {
   return (
     <div className="p-4 w-[300px] h-[270px] rounded-lg  border border-gray-200 flex flex-col gap-3 bg-white">

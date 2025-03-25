@@ -3,33 +3,29 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Minus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { IncreaseDecreaseButton } from "./increaseDecreaseButton";
 
 export const AddOrder = ({ food }: { food: Food }) => {
-  const [foodCount, setFoodCount] = useState(1);
-  const [chosenFoods, setChosenFoods] = useState<
-    { food: Food; count: number }[]
-  >(() => {
-    const savedFoods = localStorage.getItem("chosenFoods");
-    return savedFoods ? JSON.parse(savedFoods) : [];
-  });
-  console.log(chosenFoods);
+  const [foodCount, setCount] = useState(1);
 
   const addToCart = () => {
-    console.log(chosenFoods);
-
-    const isChosenBefore = chosenFoods.filter((el) => el.food._id === food._id);
+    const chosenFoods = JSON.parse(localStorage.getItem("chosenFoods") || "[]");
+    const isChosenBefore = chosenFoods.filter(
+      (el: { food: Food; count: string }) => el.food._id === food._id
+    );
     if (isChosenBefore.length === 0) {
       const updatedFoods = [...chosenFoods, { food, count: foodCount }];
-      setChosenFoods(updatedFoods);
       localStorage.setItem("chosenFoods", JSON.stringify(updatedFoods));
+      const totalPrice = parseInt(localStorage.getItem("totalPrice") || "0");
+      const price = food.price * foodCount;
+      localStorage.setItem("totalPrice", (totalPrice + price).toString());
     }
   };
   return (
@@ -45,10 +41,13 @@ export const AddOrder = ({ food }: { food: Food }) => {
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="flex gap-5 ">
-          <div className="rounded-lg h-[360px] overflow-hidden">
-            <img src={food.image} alt="food image" />
+          <div className="rounded-lg h-[360px] overflow-hidden ">
+            <img
+              src={food.image}
+              alt="food image"
+              className=" h-full object-cover"
+            />
           </div>
-
           <div className="h-full flex flex-col justify-between">
             <div>
               <p className="text-red-500 text-xl font-bold">{food.foodName}</p>
@@ -60,22 +59,10 @@ export const AddOrder = ({ food }: { food: Food }) => {
                   <p>Total price</p>
                   <p>{food.price * foodCount}</p>
                 </div>
-                <div className="flex gap-2 items-center">
-                  <Button
-                    className="bg-white border-gray-500 rounded-full border p-3"
-                    onClick={() => setFoodCount(foodCount - 1)}
-                    disabled={foodCount === 1}
-                  >
-                    <Minus color="black" />
-                  </Button>
-                  <p>{foodCount}</p>
-                  <Button
-                    className="bg-white border-gray-500 rounded-full border p-3"
-                    onClick={() => setFoodCount(foodCount + 1)}
-                  >
-                    <Plus color="black" />
-                  </Button>
-                </div>
+                <IncreaseDecreaseButton
+                  foodInfo={{ food, count: foodCount }}
+                  setCount={setCount}
+                />
               </div>
               <Button className="w-full rounded-full" onClick={addToCart}>
                 Add to card
