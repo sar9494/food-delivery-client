@@ -8,13 +8,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const token =
     (typeof window !== "undefined" && localStorage.getItem("token")) || "";
   const path = usePathname();
-  const { isExpired } = useJwt(token!);
+  const { isExpired, decodedToken } = useJwt(token!);
   useEffect(() => {
     if (!token || isExpired) {
       router.push("/login");
       setLoading(false);
+      console.log(decodedToken);
+
       return;
     } else {
+      localStorage.setItem("user", JSON.stringify(decodedToken));
       setLoading(false);
       if (path.includes("/login") || path.includes("/signUp")) {
         router.push("/");

@@ -3,6 +3,7 @@ export const updateUserInfo = async (values: {
   token: string | null;
   phoneNumber?: number;
   address?: string;
+  orderItem?: { food: string; quantity: number };
 }) => {
   console.log(values);
 

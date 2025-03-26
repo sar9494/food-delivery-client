@@ -7,13 +7,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { IncreaseDecreaseButton } from "./increaseDecreaseButton";
 
 export const AddOrder = ({ food }: { food: Food }) => {
-  const [foodCount, setCount] = useState(1);
+  const [foodCount, setFoodCount] = useState(1);
 
   const addToCart = () => {
     const chosenFoods = JSON.parse(localStorage.getItem("chosenFoods") || "[]");
@@ -23,9 +22,6 @@ export const AddOrder = ({ food }: { food: Food }) => {
     if (isChosenBefore.length === 0) {
       const updatedFoods = [...chosenFoods, { food, count: foodCount }];
       localStorage.setItem("chosenFoods", JSON.stringify(updatedFoods));
-      const totalPrice = parseInt(localStorage.getItem("totalPrice") || "0");
-      const price = food.price * foodCount;
-      localStorage.setItem("totalPrice", (totalPrice + price).toString());
     }
   };
   return (
@@ -59,10 +55,22 @@ export const AddOrder = ({ food }: { food: Food }) => {
                   <p>Total price</p>
                   <p>{food.price * foodCount}</p>
                 </div>
-                <IncreaseDecreaseButton
-                  foodInfo={{ food, count: foodCount }}
-                  setCount={setCount}
-                />
+                <div className="flex gap-2 items-center">
+                  <Button
+                    className="bg-white border-gray-500 rounded-full border p-3"
+                    onClick={() => setFoodCount(foodCount - 1)}
+                    disabled={foodCount === 1}
+                  >
+                    <Minus color="black" />
+                  </Button>
+                  <p>{foodCount}</p>
+                  <Button
+                    className="bg-white border-gray-500 rounded-full border p-3"
+                    onClick={() => setFoodCount(foodCount + 1)}
+                  >
+                    <Plus color="black" />
+                  </Button>
+                </div>
               </div>
               <Button className="w-full rounded-full" onClick={addToCart}>
                 Add to card

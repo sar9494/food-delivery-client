@@ -5,17 +5,19 @@ import { useEffect, useState } from "react";
 import { getCategories, getFoods } from "@/utils/getDataFunctions";
 import { Category, Food } from "@/utils/types";
 import { Foods } from "./_features/Foods";
+import { useUser } from "@/provider/UserProvider";
 export default function Home() {
   const [categories, setCategories] = useState(Array<Category>);
   const [foods, setFoods] = useState(Array<Food>);
+  // const { email } = useUser();
+  // console.log(email);
+
   useEffect(() => {
     const fetchData = async () => {
       const categories = await getCategories();
-      console.log(categories);
       setCategories(categories);
       const foods = await getFoods();
       setFoods(foods);
-      console.log(foods);
     };
     fetchData();
   }, []);
