@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Category } from "@/utils/types";
-export const Categories = ({ categories }: { categories: Array<Category> }) => {
+import { useCategory } from "@/provider/CategoryProvider";
+
+export const Categories = () => {
+  const { categories } = useCategory();
   return (
     <div className="w-full flex gap-2  ">
-      {categories.map((category, index) => {
+      {categories?.map((category, index) => {
         return (
-          <Button key={index} className="rounded-full bg-white text-black">
+          <Button key={index} className="rounded-full bg-white text-black ">
             {category.categoryName}
           </Button>
         );

@@ -10,9 +10,6 @@ export default function Home() {
     password: "",
     confirm: "",
   });
-  useEffect(() => {
-    console.log(step);
-  }, [step]);
   return (
     <div className="flex w-screen items-center justify-center py-5 ">
       <div className="flex w-[1300px] items-center justify-center gap-5">

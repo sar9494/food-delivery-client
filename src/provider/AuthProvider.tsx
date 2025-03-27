@@ -6,28 +6,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const token =
-    (typeof window !== "undefined" && localStorage.getItem("token")) || "";
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const path = usePathname();
-  const { isExpired, decodedToken } = useJwt(token!);
-  useEffect(() => {
-    if (!token || isExpired) {
-      router.push("/login");
-      setLoading(false);
-      console.log(decodedToken);
 
-      return;
-    } else {
-      localStorage.setItem("user", JSON.stringify(decodedToken));
-      setLoading(false);
-      if (path.includes("/login") || path.includes("/signUp")) {
-        router.push("/");
+  const { isExpired, reEvaluateToken } = useJwt(token || "");
+
+  useEffect(() => {
+    const checkToken = async () => {
+      if (!token) {
+        router.push("/login");
+        setLoading(false);
+        return;
       }
-    }
-  }, [token, isExpired]);
+
+      reEvaluateToken(token);
+
+      if (isExpired) {
+        router.push("/login");
+      } else {
+        router.push(path || "/");
+      }
+
+      setLoading(false);
+    };
+
+    checkToken();
+  }, [token, isExpired, router, path]);
 
   if (loading) {
     return <div>... LOADING</div>;
   }
 
-  return children;
+  return <>{children}</>;
 };

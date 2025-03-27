@@ -1,4 +1,4 @@
-import { Food } from "@/utils/types";
+import { Food } from "@/provider/FoodProvider";
 import { AddOrder } from "./AddOrder";
 
 export const FoodCard = ({ food }: { food: Food }) => {

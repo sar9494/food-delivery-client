@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Food } from "@/utils/types";
+import { Food } from "@/provider/FoodProvider";
 import { ChosenFoodCard } from "./ChosenFoodCard";
 import { SheetClose } from "@/components/ui/sheet";
 export const OrderAndCartSwitch = () => {

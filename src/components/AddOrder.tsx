@@ -1,4 +1,4 @@
-import { Food } from "@/utils/types";
+import { Food } from "@/provider/FoodProvider";
 import {
   Dialog,
   DialogContent,

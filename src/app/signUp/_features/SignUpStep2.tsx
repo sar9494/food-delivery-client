@@ -4,16 +4,16 @@ import { Button } from "../../../components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
-import { userInfoType } from "@/type/userInfoType";
 import { BackButton } from "../_components/BackButton";
-import { Formik } from "formik";
+import { useFormik } from "formik";
 import { passRejex } from "@/utils/userYup";
+import { signupType } from "@/utils/signupType";
 export const SignUpStep2 = ({
   setStep,
   userInfo,
 }: {
   setStep: Function;
-  userInfo: userInfoType;
+  userInfo: signupType;
 }) => {
   const router = useRouter();
   const letsGoHandler = async (values: { password: string }) => {
@@ -31,57 +31,53 @@ export const SignUpStep2 = ({
       console.log(error);
     }
   };
-
+  const formik = useFormik({
+    validationSchema: passRejex,
+    initialValues: {
+      password: "",
+      confirm: "",
+    },
+    onSubmit: letsGoHandler,
+  });
   return (
-    <Formik
-      validationSchema={passRejex}
-      initialValues={{
-        password: "",
-        confirm: "",
-      }}
-      onSubmit={letsGoHandler}
-    >
-      {({ errors, values, handleChange, handleSubmit }) => (
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-6 w-[400px]">
-            <BackButton onClick={() => setStep(1)} />
-            <div>
-              <p>
-                <b>Create your account</b>
-              </p>
-              <p>Create a strong password with letters, numbers.</p>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div>
-                <Input
-                  placeholder="Password"
-                  name="password"
-                  onChange={handleChange}
-                  value={values.password}
-                />
-                <p className="text-red-500">{errors.password}</p>
-              </div>
-              <div>
-                <Input
-                  placeholder="Confirm"
-                  name="confirm"
-                  onChange={handleChange}
-                  value={values.confirm}
-                />
-                <p className="text-red-500">{errors.confirm}</p>
-              </div>
-              <label className="flex gap-2">
-                <input type="checkbox" />
-                <p>Show password</p>
-              </label>
-            </div>
-            <Button type="submit">Let's Go</Button>
-            <Link href={`/login`}>
-              <p className="text-[#2563EB]">Already have an account?</p>
-            </Link>
+    <form onSubmit={formik.handleSubmit}>
+      <div className="flex flex-col gap-6 w-[400px]">
+        <BackButton onClick={() => setStep(1)} />
+        <div>
+          <p>
+            <b>Create your account</b>
+          </p>
+          <p>Create a strong password with letters, numbers.</p>
+        </div>
+        <div className="flex flex-col gap-4">
+          <div>
+            <Input
+              placeholder="Password"
+              name="password"
+              onChange={formik.handleChange}
+              value={formik.values.password}
+            />
+            <p className="text-red-500">{formik.errors.password}</p>
           </div>
-        </form>
-      )}
-    </Formik>
+          <div>
+            <Input
+              placeholder="Confirm"
+              name="confirm"
+              onChange={formik.handleChange}
+              value={formik.values.confirm}
+            />
+            <p className="text-red-500">{formik.errors.confirm}</p>
+          </div>
+          <label className="flex gap-2">
+            <input type="checkbox" />
+            <p>Show password</p>
+          </label>
+        </div>
+        <Button type="submit">Let's Go</Button>
+        <Link href={`/login`}>
+          <p className="text-[#2563EB]">Already have an account?</p>
+        </Link>
+      </div>
+    </form>
   );
 };

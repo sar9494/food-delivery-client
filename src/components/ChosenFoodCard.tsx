@@ -1,6 +1,6 @@
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "./ui/button";
-import { Food } from "@/utils/types";
+import { Food } from "@/provider/FoodProvider";
 import { useState } from "react";
 
 export const ChosenFoodCard = (props: { food: Food; count: number }) => {
