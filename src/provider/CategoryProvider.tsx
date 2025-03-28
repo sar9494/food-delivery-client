@@ -1,6 +1,12 @@
 "use client";
 import axios from "axios";
 import React, { useState, createContext, useContext, useEffect } from "react";
+import {
+  useQuery,
+  QueryObserverResult,
+  RefetchOptions,
+} from "@tanstack/react-query";
+
 export type Category = {
   categoryName: string;
   _id: string;
@@ -8,7 +14,9 @@ export type Category = {
 };
 type CategoryContextType = {
   categories: Category[];
-  getCategories: () => void;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<any, Error>>;
 };
 const CategoryContext = createContext<CategoryContextType>(
   {} as CategoryContextType
@@ -18,21 +26,22 @@ export const CategoryProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  const getCategories = async () => {
-    const response = await axios.get("http://localhost:4000/category");
-    setCategories(response.data);
-  };
-  useEffect(() => {
-    getCategories();
-  }, []);
-
+  const {
+    data: categories,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await axios.get("http://localhost:4000/category");
+      return response.data;
+    },
+  });
   return (
     <CategoryContext.Provider
       value={{
         categories: categories,
-        getCategories: getCategories,
+        refetch: refetch,
       }}
     >
       {children}

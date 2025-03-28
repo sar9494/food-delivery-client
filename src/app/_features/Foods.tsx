@@ -7,7 +7,7 @@ export const Foods = () => {
   return (
     <div className="w-full text-white text-xl font-bold ">
       {categories
-        .filter((category) => category.foodCount !== 0)
+        ?.filter((category) => category.foodCount !== 0)
         .map((category, index) => {
           return (
             <div key={index}>

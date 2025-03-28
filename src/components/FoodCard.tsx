@@ -1,5 +1,5 @@
 import { Food } from "@/provider/FoodProvider";
-import { AddOrder } from "./AddOrder";
+import { AddOrderModal } from "./AddOrderModal";
 
 export const FoodCard = ({ food }: { food: Food }) => {
   return (
@@ -10,7 +10,7 @@ export const FoodCard = ({ food }: { food: Food }) => {
           alt=""
           className="rounded-lg w-full object-cover"
         />
-        <AddOrder food={food} />
+        <AddOrderModal food={food} />
       </div>
       <div>
         <div className="flex justify-between">

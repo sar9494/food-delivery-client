@@ -6,6 +6,9 @@ import { AuthProvider } from "@/provider/AuthProvider";
 import { UserProvider } from "@/provider/UserProvider";
 import { FoodProvider } from "@/provider/FoodProvider";
 import { CategoryProvider } from "@/provider/CategoryProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,9 +31,11 @@ export default function RootLayout({
       >
         <AuthProvider>
           <UserProvider>
-            <CategoryProvider>
-              <FoodProvider>{children}</FoodProvider>
-            </CategoryProvider>
+            <QueryClientProvider client={queryClient}>
+              <CategoryProvider>
+                <FoodProvider>{children}</FoodProvider>
+              </CategoryProvider>
+            </QueryClientProvider>
           </UserProvider>
         </AuthProvider>
       </body>

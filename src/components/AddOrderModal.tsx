@@ -11,9 +11,8 @@ import { Minus, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 
-export const AddOrder = ({ food }: { food: Food }) => {
+export const AddOrderModal = ({ food }: { food: Food }) => {
   const [foodCount, setFoodCount] = useState(1);
-
   const addToCart = () => {
     const chosenFoods = JSON.parse(localStorage.getItem("chosenFoods") || "[]");
     const isChosenBefore = chosenFoods.filter(
