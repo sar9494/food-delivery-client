@@ -18,7 +18,7 @@ export const UserInfoModal = () => {
       </PopoverTrigger>
       <PopoverContent className="w-80 flex justify-center">
         <div className="grid gap-4">
-          <p>{user.email}</p>
+          <p>{user?.email}</p>
           <Button onClick={() => handleLogout()}>Sign out</Button>
         </div>
       </PopoverContent>

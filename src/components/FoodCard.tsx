@@ -7,7 +7,7 @@ export const FoodCard = ({ food }: { food: Food }) => {
       <div className="w-full h-3/5 rounded-lg flex  gap-5 relative">
         <img
           src={food.image}
-          alt=""
+          alt="food image"
           className="rounded-lg w-full object-cover"
         />
         <AddOrderModal food={food} />

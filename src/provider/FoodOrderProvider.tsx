@@ -1,46 +1,78 @@
 "use client";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
-import React, { useState, createContext, useContext, useEffect } from "react";
-export type Food = {
-  _id: string;
-  foodName: string;
-  price: number;
-  ingredients: string;
-  image: string;
-  category: {
-    name: string;
-    id: string;
-  };
+import React, { createContext, useContext } from "react";
+import { useUser } from "./UserProvider";
+export type FoodOrder = {
+  food: string;
+  quantity: number;
 };
 type FoodOrderContextType = {
-  foods: Food[];
-  getFoods: () => void;
+  orders: FoodOrder[];
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<any, Error>>;
+  updateFoodOrders: (
+    newOrder: {
+      food: string;
+      quantity: number;
+    }[]
+  ) => Promise<void>;
 };
 const FoodOrderContext = createContext<FoodOrderContextType>(
   {} as FoodOrderContextType
 );
-export const FoodProvider = ({ children }: { children: React.ReactNode }) => {
-  const [foods, setFoods] = useState<Food[]>([]);
-
-  const getFoodInfo = async () => {
-    const response = await axios.get("http://localhost:4000/foodOrders");
-    setFoods(response.data);
+export const FoodOrderProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { user } = useUser();
+  const {
+    data: orders,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["foodOrders"],
+    queryFn: async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/foodOrders");
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+  const updateFoodOrders = async (
+    newOrder: {
+      food: string;
+      quantity: number;
+    }[]
+  ) => {
+    const response = await axios.post("http://localhost:4000/foodOrders", {
+      user: user._id,
+      totalPrice: parseFloat(localStorage.getItem("totalPrice") || "0"),
+      foodOrderItems: newOrder,
+    });
+    return response.data;
   };
-  useEffect(() => {
-    getFoodInfo();
-  }, []);
   return (
     <FoodOrderContext.Provider
       value={{
-        foods: foods,
-        getFoods: getFoodInfo,
+        orders: orders,
+        refetch: refetch,
+        updateFoodOrders: updateFoodOrders,
       }}
     >
-      {children}
+      {isLoading && children ? <div>...Loading</div> : children}
     </FoodOrderContext.Provider>
   );
 };
-export const useFood = () => {
+export const useFoodOrder = () => {
   const context = useContext(FoodOrderContext);
   if (!context) {
     console.log("context is not defined");

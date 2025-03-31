@@ -1,7 +1,8 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useState, createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext } from "react";
 type UserType = {
   email: string;
   address: string;
@@ -13,39 +14,36 @@ type UserContextType = {
   user: UserType;
   handleLogout: () => void;
   updateUserInfo: (values: {
-    token: string | null;
+    id: string | null;
     phoneNumber?: number;
     address?: string;
     orderItem?: { food: string; quantity: number };
   }) => Promise<any>;
-  getUser: (id: { id: string }) => Promise<any>;
+  isLoading: boolean;
 };
 const UserContext = createContext<UserContextType>({} as UserContextType);
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const [user, setUser] = useState<UserType>({} as UserType);
-  const [loading, setLoading] = useState(true);
 
-  const getUserData = async () => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-
+  const {
+    data: user,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const storedUser = localStorage.getItem("user");
+      const parsedUser = JSON.parse(storedUser!);
       try {
-        const response = await gerUser(parsedUser.id);
-
-        setUser(response);
-        setLoading(false);
+        const response = await axios.post("http://localhost:4000/user", {
+          id: parsedUser.id,
+        });
+        return response.data;
       } catch (error) {
         console.log(error);
       }
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    getUserData();
-  }, []);
+    },
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -54,24 +52,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const updateUserInfo = async (values: {
-    token: string | null;
+    id: string | null;
     phoneNumber?: number;
     address?: string;
     orderItem?: { food: string; quantity: number };
   }) => {
     try {
       await axios.put("http://localhost:4000/user", values);
-      getUserData();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const gerUser = async (id: { id: string }) => {
-    try {
-      const response = await axios.post("http://localhost:4000/user", {
-        id: id,
-      });
-      return response.data;
+      await refetch();
     } catch (error) {
       console.log(error);
     }
@@ -83,10 +71,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         user: user,
         handleLogout: handleLogout,
         updateUserInfo: updateUserInfo,
-        getUser: gerUser,
+        isLoading: isLoading,
       }}
     >
-      {loading && user ? <div>...loading</div> : children}
+      {isLoading && user ? <div>...loading</div> : children}
     </UserContext.Provider>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import React, { useState, createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext } from "react";
 import {
   useQuery,
   QueryObserverResult,

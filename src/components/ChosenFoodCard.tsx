@@ -1,36 +1,36 @@
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { Food } from "@/provider/FoodProvider";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 
-export const ChosenFoodCard = (props: { food: Food; count: number }) => {
-  const { food, count } = props;
+export const ChosenFoodCard = (props: {
+  food: Food;
+  count: number;
+  setFoodsInCart: Dispatch<any>;
+  foodsInCart: { food: Food; count: number }[];
+}) => {
+  const { food, count, setFoodsInCart, foodsInCart } = props;
   const [foodCount, setFoodCount] = useState(count);
-  const foodsInCart = localStorage.getItem("chosenFoods");
 
   const handleFoodCount = (number: number) => {
     setFoodCount(foodCount + number);
-    const foodw = JSON.parse(foodsInCart || "[]").filter(
-      (el: { food: Food }) => {
-        return el.food._id === food._id;
-      }
-    );
+    const foodw = foodsInCart.filter((el: { food: Food }) => {
+      return el.food._id === food._id;
+    });
 
-    const updatedList = JSON.parse(foodsInCart || "[]").filter(
-      (el: { food: Food }) => {
-        return el.food._id !== food._id;
-      }
-    );
+    const updatedList = foodsInCart.filter((el: { food: Food }) => {
+      return el.food._id !== food._id;
+    });
 
     updatedList.push({ ...foodw[0], count: foodCount + number });
+    setFoodsInCart(updatedList);
     localStorage.setItem("chosenFoods", JSON.stringify(updatedList));
   };
   const deleteFromCart = () => {
-    const deletedList = JSON.parse(foodsInCart || "[]").filter(
-      (el: { food: Food }) => {
-        return el.food._id !== food._id;
-      }
-    );
+    const deletedList = foodsInCart.filter((el: { food: Food }) => {
+      return el.food._id !== food._id;
+    });
+    setFoodsInCart(deletedList);
 
     localStorage.setItem("chosenFoods", JSON.stringify(deletedList));
   };

@@ -1,18 +1,45 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Food } from "@/provider/FoodProvider";
-import { ChosenFoodCard } from "./ChosenFoodCard";
 import { SheetClose } from "@/components/ui/sheet";
+import { Cart } from "./Cart";
+import { useEffect, useState } from "react";
+import { useFoodOrder } from "@/provider/FoodOrderProvider";
+import { EmptyPlaceHolder } from "./EmptyPlaceHolder";
 export const OrderAndCartSwitch = () => {
-  const foodsInCart = JSON.parse(localStorage.getItem("chosenFoods") || "[]");
-  const totalPrice = foodsInCart.reduce(
-    (sum: number, items: { food: Food; count: number }) => {
-      return sum + Number(items.food.price * items.count);
-    },
-    0
-  );
+  const [foodsInCart, setFoodsInCart] = useState<
+    Array<{ food: Food; count: number }>
+  >([]);
   const shippingPrice = 0.99;
-  const handleFoodOrder = () => {};
+  const { updateFoodOrders } = useFoodOrder();
+  useEffect(() => {
+    setFoodsInCart(JSON.parse(localStorage.getItem("chosenFoods") || "[]"));
+  }, []);
+  const [totalPrice, setTotalPrice] = useState(0);
+  useEffect(() => {
+    setTotalPrice(
+      foodsInCart.reduce(
+        (sum: number, items: { food: Food; count: number }) => {
+          return sum + Number(items.food.price * items.count);
+        },
+        0
+      )
+    );
+    localStorage.setItem("totalPrice", totalPrice.toString());
+  }, [foodsInCart]);
+  useEffect(() => {
+    localStorage.setItem("totalPrice", (totalPrice + shippingPrice).toString());
+  }, [totalPrice]);
+  const handleOrderCheckout = async () => {
+    const newOrder = foodsInCart.map((el) => {
+      return { food: el.food._id, quantity: el.count };
+    });
+    const response = await updateFoodOrders(newOrder);
+    console.log(response);
+
+    console.log(newOrder);
+  };
+
   return (
     <Tabs defaultValue="account" className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2">
@@ -25,20 +52,8 @@ export const OrderAndCartSwitch = () => {
         <div className="flex flex-col gap-5">
           <div className="p-5 bg-white rounded-2xl">
             <p className="text-xl font-semibold">My cart</p>
-            <div className="flex flex-col py-5 gap-5">
-              {foodsInCart &&
-                foodsInCart?.map(
-                  (el: { food: Food; count: number }, index: number) => {
-                    return (
-                      <ChosenFoodCard
-                        key={index}
-                        food={el.food}
-                        count={el.count}
-                      />
-                    );
-                  }
-                )}
-            </div>
+            {foodsInCart.length === 0 && <EmptyPlaceHolder place="cart" />}
+            <Cart foodsInCart={foodsInCart} setFoodsInCart={setFoodsInCart} />
             <SheetClose className="w-full bg-white rounded-full hover:text-white hover:bg-red-500 border border-red-500 text-red-500 py-2">
               Add food
             </SheetClose>
@@ -59,7 +74,10 @@ export const OrderAndCartSwitch = () => {
               <p>Total</p>
               <p>{totalPrice + shippingPrice}</p>
             </div>
-            <Button className="bg-red-500 w-full rounded-full hover:bg-white hover:text-red-500 border border-red-500">
+            <Button
+              className="bg-red-500 w-full rounded-full hover:bg-white hover:text-red-500 border border-red-500"
+              onClick={handleOrderCheckout}
+            >
               Checkout
             </Button>
           </div>
@@ -68,6 +86,9 @@ export const OrderAndCartSwitch = () => {
       <TabsContent value="order" className="sm:max-h-full">
         <div className="p-5 bg-white rounded-2xl w-full">
           <p className="text-xl font-semibold">Order history</p>
+          <SheetClose className="w-full bg-white rounded-full hover:text-white hover:bg-red-500 border border-red-500 text-red-500 py-2">
+            Add food
+          </SheetClose>
         </div>
       </TabsContent>
     </Tabs>
