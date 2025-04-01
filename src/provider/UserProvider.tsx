@@ -34,10 +34,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     queryFn: async () => {
       const storedUser = localStorage.getItem("user");
       const parsedUser = JSON.parse(storedUser!);
+      console.log(parsedUser.id);
+
       try {
         const response = await axios.post("http://localhost:4000/user", {
           id: parsedUser.id,
         });
+        console.log(response.data);
+
         return response.data;
       } catch (error) {
         console.log(error);

@@ -6,16 +6,21 @@ import { Cart } from "./Cart";
 import { useEffect, useState } from "react";
 import { useFoodOrder } from "@/provider/FoodOrderProvider";
 import { EmptyPlaceHolder } from "./EmptyPlaceHolder";
+import axios from "axios";
+import { Soup, Timer, X } from "lucide-react";
 export const OrderAndCartSwitch = () => {
   const [foodsInCart, setFoodsInCart] = useState<
     Array<{ food: Food; count: number }>
   >([]);
   const shippingPrice = 0.99;
-  const { updateFoodOrders } = useFoodOrder();
+  const { updateFoodOrders, orders } = useFoodOrder();
+  const [totalPrice, setTotalPrice] = useState(0);
+
   useEffect(() => {
     setFoodsInCart(JSON.parse(localStorage.getItem("chosenFoods") || "[]"));
+    console.log(orders);
   }, []);
-  const [totalPrice, setTotalPrice] = useState(0);
+
   useEffect(() => {
     setTotalPrice(
       foodsInCart.reduce(
@@ -30,14 +35,12 @@ export const OrderAndCartSwitch = () => {
   useEffect(() => {
     localStorage.setItem("totalPrice", (totalPrice + shippingPrice).toString());
   }, [totalPrice]);
+
   const handleOrderCheckout = async () => {
     const newOrder = foodsInCart.map((el) => {
       return { food: el.food._id, quantity: el.count };
     });
-    const response = await updateFoodOrders(newOrder);
-    console.log(response);
-
-    console.log(newOrder);
+    await updateFoodOrders(newOrder);
   };
 
   return (
@@ -86,6 +89,46 @@ export const OrderAndCartSwitch = () => {
       <TabsContent value="order" className="sm:max-h-full">
         <div className="p-5 bg-white rounded-2xl w-full">
           <p className="text-xl font-semibold">Order history</p>
+          {orders?.length === 0 ? (
+            <EmptyPlaceHolder place="order" />
+          ) : (
+            <div>
+              {orders?.map((el, index) => {
+                return (
+                  <div key={index}>
+                    <div className="flex w-full justify-between p-3 items-center">
+                      <p className="font-extrabold text-xl">${el.totalPrice}</p>
+                      <Button className="rounded-full bg-white text-red-500 border border-gray-500">
+                        {el.status}
+                      </Button>
+                    </div>
+                    <div className="text-gray-500">
+                      <div>
+                        {el.foodOrderItems.map((item, index) => {
+                          return (
+                            <div
+                              key={index}
+                              className="w-full flex justify-between  py-2"
+                            >
+                              <div className="flex gap-2">
+                                <Soup color="gray" />
+                                <p>{item.foodName}</p>
+                              </div>
+                              <p>x {item.quantity}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="flex gap-2">
+                        <Timer color="gray" />
+                        <p>{el.createdAt.split("T")[0]}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           <SheetClose className="w-full bg-white rounded-full hover:text-white hover:bg-red-500 border border-red-500 text-red-500 py-2">
             Add food
           </SheetClose>

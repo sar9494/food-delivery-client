@@ -8,8 +8,10 @@ import axios from "axios";
 import React, { createContext, useContext } from "react";
 import { useUser } from "./UserProvider";
 export type FoodOrder = {
-  food: string;
-  quantity: number;
+  createdAt: string;
+  foodOrderItems: { foodName: string; quantity: number }[];
+  status: string;
+  totalPrice: number;
 };
 type FoodOrderContextType = {
   orders: FoodOrder[];
@@ -33,17 +35,23 @@ export const FoodOrderProvider = ({
 }) => {
   const { user } = useUser();
   const {
-    data: orders,
+    data: orders = [],
     isLoading,
     refetch,
   } = useQuery({
     queryKey: ["foodOrders"],
     queryFn: async () => {
       try {
-        const response = await axios.get("http://localhost:4000/foodOrders");
+        const response = await axios.post(
+          "http://localhost:4000/userfoodOrders",
+          { id: user._id }
+        );
+        console.log(response);
+
         return response.data;
       } catch (error) {
         console.log(error);
+        return [];
       }
     },
   });
@@ -58,6 +66,7 @@ export const FoodOrderProvider = ({
       totalPrice: parseFloat(localStorage.getItem("totalPrice") || "0"),
       foodOrderItems: newOrder,
     });
+
     return response.data;
   };
   return (
