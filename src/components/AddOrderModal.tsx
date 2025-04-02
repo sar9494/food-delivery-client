@@ -26,7 +26,7 @@ export const AddOrderModal = ({ food }: { food: Food }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="absolute bg-white rounded-full p-2 bottom-4 right-4">
+        <div className="absolute bg-white rounded-full p-2 bottom-4 right-4 cursor-pointer">
           <Plus color="red" size={16} />
         </div>
       </DialogTrigger>

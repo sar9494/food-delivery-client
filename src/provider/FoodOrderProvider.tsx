@@ -35,7 +35,7 @@ export const FoodOrderProvider = ({
 }) => {
   const { user } = useUser();
   const {
-    data: orders = [],
+    data: orders,
     isLoading,
     refetch,
   } = useQuery({
@@ -44,14 +44,13 @@ export const FoodOrderProvider = ({
       try {
         const response = await axios.post(
           "http://localhost:4000/userfoodOrders",
-          { id: user._id }
+          { id: user?._id }
         );
         console.log(response);
 
         return response.data;
       } catch (error) {
         console.log(error);
-        return [];
       }
     },
   });
@@ -66,7 +65,7 @@ export const FoodOrderProvider = ({
       totalPrice: parseFloat(localStorage.getItem("totalPrice") || "0"),
       foodOrderItems: newOrder,
     });
-
+    await refetch();
     return response.data;
   };
   return (

@@ -7,7 +7,9 @@ import { useEffect, useState } from "react";
 import { useFoodOrder } from "@/provider/FoodOrderProvider";
 import { EmptyPlaceHolder } from "./EmptyPlaceHolder";
 import axios from "axios";
-import { Soup, Timer, X } from "lucide-react";
+import { Map, Soup, Timer, X } from "lucide-react";
+import { useUser } from "@/provider/UserProvider";
+import { cn } from "@/lib/utils";
 export const OrderAndCartSwitch = () => {
   const [foodsInCart, setFoodsInCart] = useState<
     Array<{ food: Food; count: number }>
@@ -15,6 +17,7 @@ export const OrderAndCartSwitch = () => {
   const shippingPrice = 0.99;
   const { updateFoodOrders, orders } = useFoodOrder();
   const [totalPrice, setTotalPrice] = useState(0);
+  const { user } = useUser();
 
   useEffect(() => {
     setFoodsInCart(JSON.parse(localStorage.getItem("chosenFoods") || "[]"));
@@ -90,25 +93,36 @@ export const OrderAndCartSwitch = () => {
         <div className="p-5 bg-white rounded-2xl w-full">
           <p className="text-xl font-semibold">Order history</p>
           {orders?.length === 0 ? (
-            <EmptyPlaceHolder place="order" />
+            <div>
+              <EmptyPlaceHolder place="order" />
+              <SheetClose className="w-full bg-white rounded-full hover:text-white hover:bg-red-500 border border-red-500 text-red-500 py-2">
+                Add food
+              </SheetClose>
+            </div>
           ) : (
             <div>
               {orders?.map((el, index) => {
                 return (
-                  <div key={index}>
+                  <div
+                    key={index}
+                    className={cn(
+                      "py-3",
+                      index !== orders.length - 1 && "border-b-4  border-dashed"
+                    )}
+                  >
                     <div className="flex w-full justify-between p-3 items-center">
                       <p className="font-extrabold text-xl">${el.totalPrice}</p>
                       <Button className="rounded-full bg-white text-red-500 border border-gray-500">
                         {el.status}
                       </Button>
                     </div>
-                    <div className="text-gray-500">
-                      <div>
+                    <div className="text-gray-500 flex flex-col gap-2">
+                      <div className="flex flex-col gap-2">
                         {el.foodOrderItems.map((item, index) => {
                           return (
                             <div
                               key={index}
-                              className="w-full flex justify-between  py-2"
+                              className="w-full flex justify-between"
                             >
                               <div className="flex gap-2">
                                 <Soup color="gray" />
@@ -123,15 +137,16 @@ export const OrderAndCartSwitch = () => {
                         <Timer color="gray" />
                         <p>{el.createdAt.split("T")[0]}</p>
                       </div>
+                      <div className="flex gap-2">
+                        <Map color="gray" />
+                        <p>{user.address}</p>
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
           )}
-          <SheetClose className="w-full bg-white rounded-full hover:text-white hover:bg-red-500 border border-red-500 text-red-500 py-2">
-            Add food
-          </SheetClose>
         </div>
       </TabsContent>
     </Tabs>

@@ -26,6 +26,7 @@ export const ChosenFoodCard = (props: {
     setFoodsInCart(updatedList);
     localStorage.setItem("chosenFoods", JSON.stringify(updatedList));
   };
+
   const deleteFromCart = () => {
     const deletedList = foodsInCart.filter((el: { food: Food }) => {
       return el.food._id !== food._id;
@@ -37,11 +38,10 @@ export const ChosenFoodCard = (props: {
 
   return (
     <div className="flex gap-5 w-full">
-      <img
-        src={food.image}
-        alt="food image"
-        className="w-[125px] h-[125px] rounded-xl"
-      />
+      <div className="w-[150px] h-[125px] rounded-xl overflow-hidden">
+        <img src={food.image} alt="food image" className="w-full h-full " />
+      </div>
+
       <div className="w-full flex flex-col justify-between">
         <div className="flex justify-between w-full">
           <div>
