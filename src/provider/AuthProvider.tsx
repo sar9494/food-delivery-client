@@ -14,11 +14,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkToken = async () => {
       if (!token) {
+        if (path === "/signUp") {
+          setLoading(false);
+          return;
+        }
         router.push("/login");
         setLoading(false);
         return;
       }
-
       reEvaluateToken(token);
 
       if (isExpired) {

@@ -16,12 +16,15 @@ const addressSchema = yup.object({
   address: yup.string().required("Address is required.").min(10),
 });
 import { useUser } from "@/provider/UserProvider";
-import { useState } from "react";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useLoader } from "@/provider/LoadingProvider";
 export function AddAddress() {
   const { user, updateUserInfo } = useUser();
-  const [isPressed, setIsPressed] = useState(false);
-
+  const { isLoading, setIsLoading } = useLoader();
+  useEffect(() => {
+    console.log(isLoading);
+  }, [isLoading]);
   const formik = useFormik({
     initialValues: {
       address: "",
@@ -32,7 +35,7 @@ export function AddAddress() {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      {!isPressed ? (
+      {!isLoading ? (
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline">
@@ -41,7 +44,7 @@ export function AddAddress() {
             </Button>
           </DialogTrigger>
           <DialogContent
-            className={cn("sm:max-w-[425px]", isPressed && "hidden")}
+            className={cn("sm:max-w-[425px]", isLoading && "hidden")}
           >
             <DialogHeader>
               <DialogTitle>Delivery address</DialogTitle>
@@ -66,12 +69,12 @@ export function AddAddress() {
                   type="submit"
                   onClick={async () => {
                     try {
-                      setIsPressed(true);
+                      setIsLoading(true);
                       await updateUserInfo({
                         ...formik.values,
                         id: user._id,
                       });
-                      setIsPressed(false);
+                      setIsLoading(false);
                     } catch (error) {
                       console.log(error);
                     }
@@ -84,7 +87,7 @@ export function AddAddress() {
           </DialogContent>
         </Dialog>
       ) : (
-        <div className="bg-white rounded-md p-2">...Loading</div>
+        <div className="bg-white rounded-md p-2">...loading</div>
       )}
     </form>
   );
