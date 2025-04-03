@@ -1,12 +1,19 @@
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { Food } from "@/provider/FoodProvider";
-import { Dispatch, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export const ChosenFoodCard = (props: {
   food: Food;
   count: number;
-  setFoodsInCart: Dispatch<any>;
+  setFoodsInCart: Dispatch<
+    SetStateAction<
+      {
+        food: Food;
+        count: number;
+      }[]
+    >
+  >;
   foodsInCart: { food: Food; count: number }[];
 }) => {
   const { food, count, setFoodsInCart, foodsInCart } = props;
