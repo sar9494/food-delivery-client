@@ -63,11 +63,11 @@ export const LogIn = () => {
                   Forgot password ?
                 </a>
                 <Link href={"/signUp"}>
-                  <p className="text-blue-400">Don't have a account?</p>
+                  <p className="text-blue-400">Dont have a account?</p>
                 </Link>
               </div>
             </div>
-            <Button type="submit">Let's Go</Button>
+            <Button type="submit">Log in</Button>
           </div>
         </form>
       )}

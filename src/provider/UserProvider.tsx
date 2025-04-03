@@ -18,7 +18,7 @@ type UserContextType = {
     phoneNumber?: number;
     address?: string;
     orderItem?: { food: string; quantity: number };
-  }) => Promise<any>;
+  }) => Promise<unknown>;
   isLoading: boolean;
 };
 const UserContext = createContext<UserContextType>({} as UserContextType);

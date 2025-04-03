@@ -6,8 +6,7 @@ import { Cart } from "./Cart";
 import { useEffect, useState } from "react";
 import { useFoodOrder } from "@/provider/FoodOrderProvider";
 import { EmptyPlaceHolder } from "./EmptyPlaceHolder";
-import axios from "axios";
-import { Map, Soup, Timer, X } from "lucide-react";
+import { Map, Soup, Timer } from "lucide-react";
 import { useUser } from "@/provider/UserProvider";
 import { cn } from "@/lib/utils";
 export const OrderAndCartSwitch = () => {
@@ -21,7 +20,6 @@ export const OrderAndCartSwitch = () => {
 
   useEffect(() => {
     setFoodsInCart(JSON.parse(localStorage.getItem("chosenFoods") || "[]"));
-    console.log(orders);
   }, []);
 
   useEffect(() => {

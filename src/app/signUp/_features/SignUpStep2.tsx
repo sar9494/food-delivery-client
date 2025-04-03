@@ -8,11 +8,12 @@ import { BackButton } from "../_components/BackButton";
 import { useFormik } from "formik";
 import { passRejex } from "@/utils/userYup";
 import { signupType } from "@/utils/signupType";
+import { Dispatch, SetStateAction } from "react";
 export const SignUpStep2 = ({
   setStep,
   userInfo,
 }: {
-  setStep: Function;
+  setStep: Dispatch<SetStateAction<number>>;
   userInfo: signupType;
 }) => {
   const router = useRouter();
@@ -73,7 +74,7 @@ export const SignUpStep2 = ({
             <p>Show password</p>
           </label>
         </div>
-        <Button type="submit">Let's Go</Button>
+        <Button type="submit">Next</Button>
         <Link href={`/login`}>
           <p className="text-[#2563EB]">Already have an account?</p>
         </Link>

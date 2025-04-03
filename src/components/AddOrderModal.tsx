@@ -1,6 +1,7 @@
 import { Food } from "@/provider/FoodProvider";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -10,6 +11,7 @@ import {
 import { Minus, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const AddOrderModal = ({ food }: { food: Food }) => {
   const [foodCount, setFoodCount] = useState(1);
@@ -21,8 +23,19 @@ export const AddOrderModal = ({ food }: { food: Food }) => {
     if (isChosenBefore.length === 0) {
       const updatedFoods = [...chosenFoods, { food, count: foodCount }];
       localStorage.setItem("chosenFoods", JSON.stringify(updatedFoods));
+      toast("🦄 Successfully added dish to cart.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -71,9 +84,11 @@ export const AddOrderModal = ({ food }: { food: Food }) => {
                   </Button>
                 </div>
               </div>
-              <Button className="w-full rounded-full" onClick={addToCart}>
-                Add to card
-              </Button>
+              <DialogClose>
+                <Button className="w-full rounded-full" onClick={addToCart}>
+                  Add to card
+                </Button>
+              </DialogClose>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 import { useUser } from "./UserProvider";
 export type FoodOrder = {
   createdAt: string;
@@ -17,7 +17,7 @@ type FoodOrderContextType = {
   orders: FoodOrder[];
   refetch: (
     options?: RefetchOptions
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<unknown, Error>>;
   updateFoodOrders: (
     newOrder: {
       food: string;

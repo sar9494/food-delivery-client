@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SignUp } from "./_features/SignUp";
 import { SignUpStep2 } from "./_features/SignUpStep2";
 

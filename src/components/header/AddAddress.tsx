@@ -19,7 +19,7 @@ import { useUser } from "@/provider/UserProvider";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 export function AddAddress() {
-  const { user, updateUserInfo, isLoading } = useUser();
+  const { user, updateUserInfo } = useUser();
   const [isPressed, setIsPressed] = useState(false);
 
   const formik = useFormik({

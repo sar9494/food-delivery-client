@@ -6,7 +6,7 @@ import Link from "next/link";
 import axios from "axios";
 import { emailSchema } from "@/utils/userYup";
 import { BackButton } from "../_components/BackButton";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { signupType } from "@/utils/signupType";
 
 export const SignUp = ({
@@ -14,8 +14,14 @@ export const SignUp = ({
   setUserInfo,
   userInfo,
 }: {
-  setStep: Function;
-  setUserInfo: Function;
+  setStep: Dispatch<SetStateAction<number>>;
+  setUserInfo: Dispatch<
+    SetStateAction<{
+      email: string;
+      password: string;
+      confirm: string;
+    }>
+  >;
   userInfo: signupType;
 }) => {
   const [isExist, setIsExist] = useState(true);

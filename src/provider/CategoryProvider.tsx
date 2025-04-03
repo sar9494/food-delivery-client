@@ -16,7 +16,7 @@ type CategoryContextType = {
   categories: Category[];
   refetch: (
     options?: RefetchOptions
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<unknown, Error>>;
 };
 const CategoryContext = createContext<CategoryContextType>(
   {} as CategoryContextType
@@ -26,11 +26,7 @@ export const CategoryProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const {
-    data: categories,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: categories, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       const response = await axios.get("http://localhost:4000/category");
