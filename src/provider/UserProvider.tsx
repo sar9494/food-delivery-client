@@ -37,9 +37,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       console.log(parsedUser.id);
 
       try {
-        const response = await axios.post("http://localhost:4000/user", {
-          id: parsedUser.id,
-        });
+        const response = await axios.post(
+          "https://food-delivery-service-bx3v.onrender.com/user",
+          {
+            id: parsedUser.id,
+          }
+        );
         console.log(response.data);
 
         return response.data;
@@ -62,7 +65,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     orderItem?: { food: string; quantity: number };
   }) => {
     try {
-      await axios.put("http://localhost:4000/user", values);
+      await axios.put(
+        "https://food-delivery-service-bx3v.onrender.com/user",
+        values
+      );
       await refetch();
     } catch (error) {
       console.log(error);

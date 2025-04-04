@@ -21,7 +21,7 @@ export const SignUpStep2 = ({
     const newUser = { ...userInfo, password: values.password };
     try {
       const response = await axios.post(
-        "http://localhost:4000/user/signup/password",
+        "https://food-delivery-service-bx3v.onrender.com/user/signup/password",
         newUser
       );
       if (response.data.success) {

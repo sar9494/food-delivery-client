@@ -43,7 +43,7 @@ export const FoodOrderProvider = ({
     queryFn: async () => {
       try {
         const response = await axios.post(
-          "http://localhost:4000/userfoodOrders",
+          "https://food-delivery-service-bx3v.onrender.com/userfoodOrders",
           { id: user?._id }
         );
         console.log(response);
@@ -60,11 +60,14 @@ export const FoodOrderProvider = ({
       quantity: number;
     }[]
   ) => {
-    const response = await axios.post("http://localhost:4000/foodOrders", {
-      user: user._id,
-      totalPrice: parseFloat(localStorage.getItem("totalPrice") || "0"),
-      foodOrderItems: newOrder,
-    });
+    const response = await axios.post(
+      "https://food-delivery-service-bx3v.onrender.com/foodOrders",
+      {
+        user: user._id,
+        totalPrice: parseFloat(localStorage.getItem("totalPrice") || "0"),
+        foodOrderItems: newOrder,
+      }
+    );
     await refetch();
     return response.data;
   };

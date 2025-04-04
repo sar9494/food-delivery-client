@@ -21,7 +21,9 @@ export const FoodProvider = ({ children }: { children: React.ReactNode }) => {
   const [foods, setFoods] = useState<Food[]>([]);
 
   const getFoodInfo = async () => {
-    const response = await axios.get("http://localhost:4000/foods");
+    const response = await axios.get(
+      "https://food-delivery-service-bx3v.onrender.com/foods"
+    );
     setFoods(response.data);
   };
   useEffect(() => {

@@ -29,7 +29,9 @@ export const CategoryProvider = ({
   const { data: categories, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:4000/category");
+      const response = await axios.get(
+        "https://food-delivery-service-bx3v.onrender.com/category"
+      );
       return response.data;
     },
   });

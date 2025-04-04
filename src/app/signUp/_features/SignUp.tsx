@@ -29,7 +29,7 @@ export const SignUp = ({
   const handleCheckEmail = async (values: { email: string }) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/user/signUp",
+        "https://food-delivery-service-bx3v.onrender.com/user/signUp",
         values
       );
       setIsExist(response.data.success);
