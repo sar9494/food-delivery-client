@@ -25,10 +25,6 @@ export const LogIn = () => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         router.push("/");
       }
-      if (response.data.success === false) {
-        console.log(response.data.message);
-      }
-      console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
