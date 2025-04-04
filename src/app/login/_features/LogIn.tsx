@@ -14,7 +14,7 @@ export const LogIn = () => {
     const { email, password } = values;
     try {
       const response = await axios.post(
-        "https://food-delivery-service-bx3v.onrender.com//user/login",
+        "https://food-delivery-service-bx3v.onrender.com/user/login",
         {
           email: email,
           password: password,
