@@ -18,7 +18,7 @@ export const Cart = (props: {
 }) => {
   const { foodsInCart, setFoodsInCart } = props;
   return (
-    <div className="flex flex-col py-5 gap-5">
+    <div className="flex flex-col py-5 gap-5 h-[400px] overflow-scroll scrollbar-hide">
       {foodsInCart &&
         foodsInCart?.map((el: { food: Food; count: number }, index: number) => {
           return (

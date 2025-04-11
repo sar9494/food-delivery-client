@@ -85,9 +85,12 @@ export const AddOrderModal = ({ food }: { food: Food }) => {
                 </div>
               </div>
               <DialogClose>
-                <Button className="w-full rounded-full" onClick={addToCart}>
+                <div
+                  className="w-full rounded-full bg-black text-white p-2"
+                  onClick={addToCart}
+                >
                   Add to card
-                </Button>
+                </div>
               </DialogClose>
             </div>
           </div>

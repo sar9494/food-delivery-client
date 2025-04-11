@@ -27,7 +27,7 @@ export function AddAddress() {
   }, [isLoading]);
   const formik = useFormik({
     initialValues: {
-      address: "",
+      address: user?.address,
     },
     onSubmit: () => {},
     validationSchema: addressSchema,
